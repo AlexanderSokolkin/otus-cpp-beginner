@@ -1,4 +1,3 @@
 .vscode
 build/
-functions/
-modules/
+*_veb/
