@@ -1,0 +1,9 @@
+target_sources(calc
+	PRIVATE
+		add.cpp
+		ast_node.cpp
+		div.cpp
+		mul.cpp
+		number.cpp
+		sub.cpp
+		variable.cpp)

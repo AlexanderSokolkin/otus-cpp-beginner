@@ -2,10 +2,10 @@
 #include <string>
 #include "structs.h"
 
-//namespace std {
-//class string;
-//}
-//struct UserScore;
+// namespace std {
+// class string;
+// }
+// struct UserScore;
 
 
 void initConfig(const std::string& t_configPath);
