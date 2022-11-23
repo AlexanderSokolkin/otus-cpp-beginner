@@ -1,6 +1,6 @@
 #include "constants.h"
 #include "utils.h"
-#include "statistic/statistic_interface.h"
+#include "stats/statistic_interface.h"
 
 #include <iostream>
 #include <exception>

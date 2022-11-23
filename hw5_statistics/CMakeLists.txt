@@ -14,7 +14,7 @@ add_executable(statistics
                 ${HEADERS}
                 ${SOURCES})
 
-add_subdirectory(statistics)
+add_subdirectory(stats)
 
 set_target_properties(statistics
                         PROPERTIES

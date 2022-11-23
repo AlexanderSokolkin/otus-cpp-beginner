@@ -1,9 +1,9 @@
 #include "utils.h"
-#include "statistic/max_statistic.h"
-#include "statistic/mean_statistic.h"
-#include "statistic/min_statistic.h"
-#include "statistic/pct_statistic.h"
-#include "statistic/std_statistic.h"
+#include "stats/max_statistic.h"
+#include "stats/mean_statistic.h"
+#include "stats/min_statistic.h"
+#include "stats/pct_statistic.h"
+#include "stats/std_statistic.h"
 
 #include <string>
 #include <exception>
@@ -11,15 +11,6 @@
 #include <regex>
 #include <algorithm>
 #include <list>
-
-
-static void throwErrorConsoleArgument(const std::string &t_arg)
-{
-	std::string err = "Unknown argument: ";
-	err += t_arg;
-	throw std::exception(err.c_str());
-}
-
 
 
 ConsoleArgs parseConsoleArgs(int t_argc, char** t_argv)
@@ -55,7 +46,7 @@ ConsoleArgs parseConsoleArgs(int t_argc, char** t_argv)
 			consoleArgs.statisticItems |= Pct;
 			int percentile = stoi(m[1].str());
 			if (percentile < 0 || percentile > 100) {
-				throwErrorConsoleArgument(arg);
+				throw std::logic_error("Unknown argument: " + arg);
 			}
 			auto it = std::find(consoleArgs.percentiles.begin(), consoleArgs.percentiles.end(), percentile);
 			if (it != consoleArgs.percentiles.end()) {
@@ -67,7 +58,7 @@ ConsoleArgs parseConsoleArgs(int t_argc, char** t_argv)
 										   percentile);
 		}
 		else {
-			throwErrorConsoleArgument(arg);
+			throw std::logic_error("Unknown argument: " + arg);
 		}
 	}
 
@@ -161,6 +152,6 @@ void readSequence(std::vector<StatisticInterface*> &t_statistics)
 	}
 
 	if (!std::cin.eof() && !std::cin.good()) {
-		throw std::exception("Invalid input data");
+		throw std::logic_error("Invalid input data");
 	}
 }
