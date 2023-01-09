@@ -252,6 +252,8 @@ SequenceContainer<T, Allocator>& SequenceContainer<T, Allocator>::operator=(Sequ
 	t_otherContainer.m_capacity = 0;
 	t_otherContainer.m_size = 0;
 	t_otherContainer.m_data = nullptr;
+
+	return *this;
 }
 
 template <typename T, typename Allocator>
