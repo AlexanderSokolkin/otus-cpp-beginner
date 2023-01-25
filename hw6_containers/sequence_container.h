@@ -83,16 +83,16 @@ public:
 	iterator end();
 	bool operator==(const SequenceContainer<T, Allocator>& t_otherContainer) const;
 	bool operator!=(const SequenceContainer<T, Allocator>& t_otherContainer) const;
-	T& operator[](int t_index);
-	const T& operator[](int t_index) const;
+	T& operator[](size_t t_index);
+	const T& operator[](size_t t_index) const;
 
 private:
 	void deallocate(T* t_data, size_t t_size, size_t t_cap);
 
 private:
-	T*			m_data;
-	size_t		m_size;
-	size_t		m_capacity;
+	T*			m_data = nullptr;
+	size_t		m_size = 0;
+	size_t		m_capacity = 0;
 	Allocator	m_allocator;
 };
 

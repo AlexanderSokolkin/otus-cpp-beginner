@@ -394,33 +394,30 @@ typename ListContainer<T, Allocator>::iterator ListContainer<T, Allocator>::eras
 		t_first = erase(t_first);
 	}
 	return erase(t_first);
-//	for (auto it = t_second; it != t_first; --it) {
-//		res = erase(it);
-//	}
-
-//	return res;
 }
 
 template <typename T, typename Allocator>
-bool ListContainer<T, Allocator>::operator==(const ListContainer<T, Allocator>& t_otherList)
+bool ListContainer<T, Allocator>::operator==(const ListContainer<T, Allocator>& t_otherList) const
 {
 	if (m_size != t_otherList.m_size) {
 		return false;
 	}
 
-	auto it1 = begin();
-	auto it2 = t_otherList.begin();
-	for (; it1 != end(); ++it1, ++it2) {
-		if (it1.m_elem != it2.m_elem) {
+	Node* first = m_head;
+	Node* second = t_otherList.m_head;
+	for (int i = 0; i < m_size; ++i) {
+		if (first->m_val != second->m_val) {
 			return false;
 		}
+		first = first->m_next;
+		second = second->m_next;
 	}
 
 	return true;
 }
 
 template <typename T, typename Allocator>
-bool ListContainer<T, Allocator>::operator!=(const ListContainer<T, Allocator>& t_otherList)
+bool ListContainer<T, Allocator>::operator!=(const ListContainer<T, Allocator>& t_otherList) const
 {
 	return !(*this == t_otherList);
 }

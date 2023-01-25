@@ -53,7 +53,7 @@ public:
 		T& operator*() const;
 
 	private:
-		Node*	m_elem;
+		Node*	m_elem = nullptr;
 		bool	m_empty;
 	};
 	friend class iterator;
@@ -86,15 +86,15 @@ public:
 	iterator insert(iterator t_pos, const T& t_val);
 	iterator erase(iterator t_pos);
 	iterator erase(iterator t_first, iterator t_second);
-	bool operator==(const ListContainer<T, Allocator>& t_otherList);
-	bool operator!=(const ListContainer<T, Allocator>& t_otherList);
+	bool operator==(const ListContainer<T, Allocator>& t_otherList) const;
+	bool operator!=(const ListContainer<T, Allocator>& t_otherList) const;
 
 
 private:
 	node_allocator	m_allocator;
-	Node*			m_head;
-	Node*			m_tail;
-	size_t			m_size;
+	Node*			m_head = nullptr;
+	Node*			m_tail = nullptr;
+	size_t			m_size = 0;
 };
 
 

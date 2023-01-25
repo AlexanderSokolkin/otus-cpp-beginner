@@ -205,7 +205,7 @@ SequenceContainer<T, Allocator>::SequenceContainer(const SequenceContainer<T, Al
 	m_size = t_otherContainer.m_size;
 	m_allocator = alloc_traits::select_on_container_copy_construction(t_otherContainer.m_allocator);
 	m_data = alloc_traits::allocate(m_allocator, m_capacity);
-	for (int i = 0; i < m_capacity; ++i) {
+	for (int i = 0; i < m_size; ++i) {
 		alloc_traits::construct(m_allocator, m_data + i, t_otherContainer.m_data[i]);
 	}
 }
@@ -218,9 +218,9 @@ SequenceContainer<T, Allocator>::SequenceContainer(SequenceContainer<T, Allocato
 	m_allocator = t_otherContainer.m_allocator; // ???
 	m_data = t_otherContainer.m_data;
 
-	m_capacity = 0;
-	m_size = 0;
-	m_data = nullptr;
+	t_otherContainer.m_capacity = 0;
+	t_otherContainer.m_size = 0;
+	t_otherContainer.m_data = nullptr;
 }
 
 template <typename T, typename Allocator>
@@ -300,7 +300,7 @@ template <typename T, typename Allocator>
 void SequenceContainer<T, Allocator>::resize(size_t t_count, const T& t_initVal)
 {
 	if (t_count <= m_size) {
-		for (int i = t_count; i < m_size; ++i) {
+		for (size_t i = t_count; i < m_size; ++i) {
 			alloc_traits::destroy(m_allocator, m_data + i);
 		}
 		m_size = t_count;
@@ -328,7 +328,7 @@ template <typename T, typename Allocator>
 void SequenceContainer<T, Allocator>::push_back(const T& t_val)
 {
 	if (m_size == m_capacity) {
-		reserve(m_capacity * 2);
+		reserve(m_capacity ? m_capacity * 2 : 2);
 	}
 
 	if (m_size < m_capacity) {
@@ -377,9 +377,9 @@ typename SequenceContainer<T, Allocator>::iterator SequenceContainer<T, Allocato
 		return end() -= 1;
 	}
 
-	int insertIndex = t_pos.m_elem - m_data;
+	size_t insertIndex = static_cast<size_t>(t_pos.m_elem - m_data);
 	if (m_size == m_capacity) {
-		m_capacity *= 2;
+		m_capacity = m_capacity ? m_capacity * 2 : 2;
 		T* newData = alloc_traits::allocate(m_allocator, m_capacity);
 		int newIndex = 0;
 		for (int i = 0; i < m_size; ++i) {
@@ -392,10 +392,10 @@ typename SequenceContainer<T, Allocator>::iterator SequenceContainer<T, Allocato
 		}
 		m_data = newData;
 		++m_size;
-		return begin() += insertIndex;
+		return begin() += static_cast<int>(insertIndex);
 	}
 	else {
-		for (int i = m_size; i > insertIndex; --i) {
+		for (size_t i = m_size; i > insertIndex; --i) {
 			alloc_traits::construct(m_allocator, m_data + i, *(m_data + i - 1));
 			alloc_traits::destroy(m_allocator, m_data + i - 1);
 		}
@@ -409,14 +409,14 @@ template <typename T, typename Allocator>
 typename SequenceContainer<T, Allocator>::iterator SequenceContainer<T, Allocator>::erase(iterator t_pos)
 {
 	alloc_traits::destroy(m_allocator, t_pos.m_elem);
-	int index = t_pos.m_elem - m_data;
-	for (int i = index; i < m_size - 1; ++i) {
+	size_t index = static_cast<size_t>(t_pos.m_elem - m_data);
+	for (size_t i = index; i < m_size - 1; ++i) {
 		alloc_traits::construct(m_allocator, m_data + i, *(m_data + i + 1));
 		alloc_traits::destroy(m_allocator, m_data + i + 1);
 	}
 	--m_size;
 
-	return begin() += index;
+	return begin() += static_cast<int>(index);
 }
 
 template <typename T, typename Allocator>
@@ -479,13 +479,13 @@ bool SequenceContainer<T, Allocator>::operator!=(const SequenceContainer<T, Allo
 }
 
 template <typename T, typename Allocator>
-T& SequenceContainer<T, Allocator>::operator[](int t_index)
+T& SequenceContainer<T, Allocator>::operator[](size_t t_index)
 {
 	return m_data[t_index];
 }
 
 template <typename T, typename Allocator>
-const T& SequenceContainer<T, Allocator>::operator[](int t_index) const
+const T& SequenceContainer<T, Allocator>::operator[](size_t t_index) const
 {
 	return const_cast<SequenceContainer<T, Allocator>*>(this)->operator[](t_index);
 }
