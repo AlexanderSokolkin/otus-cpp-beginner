@@ -17,21 +17,23 @@ class Field : public sf::Drawable, public sf::Transformable
 {
 public:
 	Field();
-	bool load(const std::string& t_cellsSet,
-			  unsigned t_cellSize,
-			  unsigned t_width,
+	void load(const char* t_cellsSet,
+			  const unsigned t_cellSize[]);
+	void init(unsigned t_width,
 			  unsigned t_height,
 			  unsigned t_bombsCount);
 
 
-	void onFieldPressed(sf::Vector2i t_pos);
-	Result onFieldReleased(sf::Vector2i t_pos, sf::Mouse::Button t_button);
+	FieldPressedResult onFieldPressed(sf::Vector2i t_pos, sf::Mouse::Button t_button);
+	FieldReleaseResult onFieldReleased(sf::Vector2i t_pos);
 	void lightOffAllCells();
 
 
 	unsigned flags() const;
 	unsigned bombs() const;
 	std::string error() const;
+	float width() const;
+	float height() const;
 
 
 private:
@@ -39,8 +41,9 @@ private:
 
 
 private:
+	void toggledCell(unsigned t_cell);
 	void openCell(unsigned t_cell);
-	Result openArea(unsigned t_cell);
+	FieldReleaseResult openArea(unsigned t_cell);
 	void explosion(unsigned t_cell);
 
 	void generateField(unsigned t_cell);
@@ -50,23 +53,26 @@ private:
 
 private:
 	struct Cell {
-		unsigned bombsAround = 0;
-		bool isBomb = false;
-		CellState state = CellState::Close;
+		Cell() : bombsAround(0), isBomb(false), state(CellState::Close) {}
+		unsigned bombsAround;
+		bool isBomb;
+		CellState state;
 	};
 
 	sf::VertexArray			m_vertices;
 	sf::Texture				m_texture;
-//	bool					m_textureLoaded;
-	bool					m_fieldIsFill;
+
 	std::string				m_error;
-	unsigned				m_cellSize;
-	unsigned				m_width;
-	unsigned				m_height;
-	unsigned				m_bombsCount;
+	bool					m_fieldIsFill;
+	unsigned				m_cellWidth;
+	unsigned				m_cellHeight;
+	unsigned				m_widthCellsCount;
+	unsigned				m_heightCellsCount;
 	unsigned				m_cellsCount;
+	unsigned				m_bombsCount;
+	unsigned				m_openCells;
+
 	std::set<unsigned>		m_bombs;
 	std::vector<unsigned>	m_lightCells;
 	std::vector<Cell>		m_cells;
-	unsigned				m_openCells;
 };
